@@ -1,6 +1,7 @@
 #pragma once
 #include "Falcor.h"
 #include "FalcorExperimental.h"
+#include "Utils/Sampling/SampleGenerator.h"
 
 using namespace Falcor;
 
@@ -28,10 +29,18 @@ public:
 
 private:
     RTAO() = default;
+    RTAO(const Dictionary& dict);
+
+    // rtao parameters
+    float mAoRadius = 0.25f;
+    float mMinT = 0.0001f;
+    uint mSampleCount = 8;
 
     uint mFrameCount = 0;
 
     Scene::SharedPtr mpScene = nullptr;
+
+    SampleGenerator::SharedPtr mpSampleGenerator = nullptr;
 
     RtProgram::SharedPtr mpProgram = nullptr;
     RtProgramVars::SharedPtr mpProgramVars = nullptr;
