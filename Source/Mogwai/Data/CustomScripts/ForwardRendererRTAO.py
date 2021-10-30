@@ -49,6 +49,8 @@ def render_graph_forward_renderer():
     g.addPass(SkyBox, 'SkyBox')
     GBufferRT = createPass('GBufferRT', {'samplePattern': SamplePattern.Center, 'sampleCount': 16, 'useAlphaTest': True, 'adjustShadingNormals': True, 'forceCullMode': False, 'cull': CullMode.CullBack, 'texLOD': TexLODMode.Mip0, 'useTraceRayInline': False})
     g.addPass(GBufferRT, 'GBufferRT')
+    AccumulatePass = createPass('AccumulatePass', {'enabled': True, 'autoReset': True, 'precisionMode': AccumulatePrecision.Single, 'subFrameCount': 0, 'maxAccumulatedFrames': 0})
+    g.addPass(AccumulatePass, 'AccumulatePass')
     g.addEdge('DepthPrePass.depth', 'SkyBox.depth')
     g.addEdge('SkyBox.target', 'LightingPass.color')
     g.addEdge('DepthPrePass.depth', 'ShadowPass.depth')
@@ -60,8 +62,10 @@ def render_graph_forward_renderer():
     g.addEdge('GBufferRT.posW', 'RTAO.posW')
     g.addEdge('GBufferRT.normW', 'RTAO.normalW')
     g.addEdge('RTAO.colorOut', 'FXAA.src')
+    g.addEdge('RTAO.aoMap', 'AccumulatePass.input')
     g.markOutput('BlitPass.dst')
     g.markOutput('RTAO.aoMap')
+    g.markOutput('AccumulatePass.output')
     return g
 
 forward_renderer = render_graph_forward_renderer()
