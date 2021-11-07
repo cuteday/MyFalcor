@@ -24,6 +24,10 @@ cudaImportExternalMemory(&externalMemory, &externalMemoryHandleDesc);
 
 The `Falcor::Resource::getSharedApiHandle()` routine retuens NT handle for every SHARED resource in Falcor. Remember to pass the `Falcor::ResourceBindFlags::Shared` bind flag when creating a shared resource in Falcor. 
 
+#### Accessing CUDA external memory
+
+There are two ways to access the imported resource in CUDA external memory: (1) directly mapping the external memory to a device pointer, or (2) mapping it onto a CUDA mipmapped array. 
+
 The following process maps the external memory onto a device pointer: 
 
 ~~~c++
@@ -52,10 +56,6 @@ mipDesc.flags = cudaUsageFlags;
 mipDesc.numLevels = 1;
     cudaExternalMemoryGetMappedMipmappedArray(&mipmappedArray, externalMemory, &mipDesc);
 ~~~
-
-#### Accessing CUDA external memory
-
-There are two ways to access the imported resource in CUDA external memory: (1) directly mapping the external memory to a device pointer, or (2) mapping it onto a CUDA mipmapped array. 
 
 #### Some observations
 
